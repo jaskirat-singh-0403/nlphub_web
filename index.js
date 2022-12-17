@@ -23,7 +23,7 @@ app.use(session({
 }))
 app.use(passport.initialize())
 app.use(passport.session())
-db.run("Create table if not exists members(Name text , timer integer, age integer, email text primary key, phone integer , timeslot text, password text, newtimeslot text, paymentstatus text)")
+db.run("Create table if not exists members(Name text , timer integer, age integer, email text primary key, phone integer , password text, paymentstatus text)")
 const port= process.env.PORT ||5000
 app.use(express.static(basepath))
 app.listen(port, () =>{
@@ -37,14 +37,13 @@ function registerpost(req,res,next){
     const password=req.body.password
     const phno=req.body.phno
     const email= req.body.email
-    const timeslot=req.body.timeslot
     const age=req.body.age
     const payment="false"
     var flag=0;
     db.serialize(()=>
    
     bcrypt.hash(password,3,(err,password2)=>{
-        db.run(`Insert into members values("${name}",NULL,"${age}","${email}","${phno}","${timeslot}","${password2}","${timeslot}","${payment}")`,(err)=>{
+        db.run(`Insert into members values("${name}",NULL,"${age}","${email}","${phno}","${password2}","${payment}")`,(err)=>{
             if(err){
                 res.render(basepath+"/Home.html",{flash:"failure"})
             }  
@@ -76,90 +75,11 @@ function summarise(req,res,next){
 }
 function landing(req,res,next){
     data={}
-    data.fee=req.user.paymentstatus
-    data.name=req.user.Name
-    data.card1_date=moment().format("DD/MM/yyyy")
-    data.card2_date=moment().add(1,"Days").format("DD/MM/yyyy")
-    data.card3_date=moment().add(2,"Days").format("DD/MM/yyyy")
-    data.card4_date=moment().add(3,"Days").format("DD/MM/yyyy")
-    data.card5_date=moment().add(4,"Days").format("DD/MM/yyyy")
-    data.card6_date=moment().add(5,"Days").format("DD/MM/yyyy")
-    data.card1_time=req.user.timeslot
-    if(moment().add(1,"Days").month()!=moment().month())
-    {
-        data.card2_time=req.user.newtimeslot
-    }
-    else{
-        data.card2_time=req.user.timeslot
-
-    }
-    if(moment().add(2,"Days").month()!=moment().month())
-    {
-        data.card3_time=req.user.newtimeslot
-    }
-    else{
-        data.card3_time=req.user.timeslot
-
-    }
-    if(moment().add(3,"Days").month()!=moment().month())
-    {
-        data.card4_time=req.user.newtimeslot
-    }
-    else{
-        data.card4_time=req.user.timeslot
-
-    }
-    if(moment().add(4,"Days").month()!=moment().month())
-    {
-        data.card5_time=req.user.newtimeslot
-    }
-    else{
-        data.card5_time=req.user.timeslot
-
-    }
-    if(moment().add(5,"Days").month()!=moment().month())
-    {
-        data.card6_time=req.user.newtimeslot
-    }
-    else{
-        data.card6_time=req.user.timeslot
-
-    }
-    console.log(data)
-    res.render(basepath+"Land.html",data)
-
-
-
-}
-function update(req,res,next){
-    if(req.user.timer!=moment().month()+1&&req.user.timeslot!=req.user.newtimeslot){
-        db.run(`Update members set timeslot="${req.user.newtimeslot}" where email="${req.user.email}"`,(err)=>{
-            console.log(err)
-           
-            if(err)
-            {
-                res.send(err)
-            }
-            next()
-        })
-
-    }
-    if(req.user.timer!=moment().month()+1){
-        db.run(`Update members set paymentstatus='false' where email="${req.user.email}"`,(err)=>{
-            console.log(err)
-           
-            if(err)
-            {
-                res.send(err)
-            }
-            next()
-        })
-
-    }
-    next()
-
     
+    data.name=req.user.Name
+    res.render(basepath+"Land.html",data)
 }
+
 function Check(req,res,next){
     if(req.isAuthenticated()){
         return next()
@@ -186,26 +106,8 @@ function chpwd(req,res,next){
         })
     })
 }
-function gettime(req,res,next){
-    res.render(basepath+"time.html",{flash:"ere"})
-}
-function chslot(req,resp,next){
-    var password=req.body.password;
-    var slot=req.body.slot
-    var timer=moment().month()+1;
-    console.log(timer)
-    bcrypt.compare(password,req.user.password,(err,res)=>{
-        if(res){
-        db.run(`Update members set newtimeslot="${slot}",timer=${timer} where email="${req.user.email}"`,(err)=>{
-            resp.render(basepath+"time.html",{flash:"success"})
-        })}
-        else{
-            resp.render(basepath+"time.html",{flash:"failure"})
 
-        }
-    })
-        
-}
+
 function summarysubmit(req,res,next){
     test=req.body.text
     res.redirect(`http://localhost:8081/summarise?text=${test}`)
@@ -214,7 +116,7 @@ function topicsubmit(req,res,next){
     test=req.body.text
     res.redirect(`https//nlphub-api.onrender.com/topic?text=${test}`)
 }
-function sentimentsubmit(req,res,next){
+function senntsubmit(req,res,next){
     test=req.body.text
     res.redirect(`http://nlphub-api.onrender.com/sentiment?text=${test}`)
 }
@@ -224,7 +126,6 @@ function topic(req,res,next){
 function sentiment(req,res,next){
     res.sendFile(basepath+"Sentiment.html")
 }
-app.post("/chslot",Check,chslot)
 app.get("/getcp",Check,getcp)
 app.get("/",home)
 app.post("/chpwd",chpwd)
@@ -236,8 +137,7 @@ app.post("/summarysubmit",Check,summarysubmit)
 app.post("/topicsubmit",Check,topicsubmit)
 app.post("/sentimentsubmit",Check,sentimentsubmit)
 app.get("/login2",getlogin2)
-app.get("/landing",Check,update,landing)
-app.get("/time",Check,gettime)
+app.get("/landing",Check,landing)
 app.get("/register",register)
 app.post("/register",registerpost)
 app.post("/login",passport.authenticate("local",{
