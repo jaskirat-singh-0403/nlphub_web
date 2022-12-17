@@ -116,7 +116,7 @@ function topicsubmit(req,res,next){
     test=req.body.text
     res.redirect(`https//nlphub-api.onrender.com/topic?text=${test}`)
 }
-function senntsubmit(req,res,next){
+function sentimentsubmit(req,res,next){
     test=req.body.text
     res.redirect(`http://nlphub-api.onrender.com/sentiment?text=${test}`)
 }
