@@ -111,7 +111,7 @@ function chpwd(req,res,next){
 
 function summarysubmit(req,res,next){
     test=req.body.text
-    res.redirect(`http://localhost:8081/summarise?text=${test}`)
+    res.redirect(`https://nlphub-api.onrender.com/summarise?text=${test}`)
 }
 function topicsubmit(req,res,next){
     test=req.body.text
@@ -119,7 +119,7 @@ function topicsubmit(req,res,next){
 }
 function sentimentsubmit(req,res,next){
     test=req.body.text
-    res.redirect(`http://nlphub-api.onrender.com/sentiment?text=${test}`)
+    res.redirect(`https://nlphub-api.onrender.com/sentiment?text=${test}`)
 }
 function topic(req,res,next){
     res.sendFile(basepath+"Topic.html")
