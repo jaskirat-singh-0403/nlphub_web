@@ -212,11 +212,11 @@ function summarysubmit(req,res,next){
 }
 function topicsubmit(req,res,next){
     test=req.body.text
-    res.redirect(`http://localhost:8081/topic?text=${test}`)
+    res.redirect(`https//nlphub-api.onrender.com/topic?text=${test}`)
 }
 function sentimentsubmit(req,res,next){
     test=req.body.text
-    res.redirect(`http://localhost:8081/sentiment?text=${test}`)
+    res.redirect(`http://nlphub-api.onrender.com/sentiment?text=${test}`)
 }
 function topic(req,res,next){
     res.sendFile(basepath+"Topic.html")
