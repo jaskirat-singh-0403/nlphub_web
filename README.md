@@ -1,4 +1,4 @@
-# NLPHub
+# NLPHub: One stop for day-to-day NLP operations
 This website(Hosted on render: https://nlphub-web.onrender.com/) aims at providing basic NLP features to the registered user which includes various features like Text Summarization, Topic Modelling and Sentiment Analysis.
 
 
