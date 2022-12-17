@@ -14,7 +14,7 @@ The website is build using HTML and Bootstrap as front-end and NodeJS as back-en
 5. Then they can enter the text they want to perform the operation on.
 6. The site communicates with a developed API to process the query and get the result
 
-
+**(Processing may be slow as project is hosted on free service RENDER)**
 
 ## Flow Chart
 ```mermaid
